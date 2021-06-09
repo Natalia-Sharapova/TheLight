@@ -6,49 +6,51 @@
 //
 
 import UIKit
+import AVFoundation
 
-var i = 0
 
-class ViewController: UIViewController {
-    
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    view.backgroundColor = .white
-    }
+    class ViewController: UIViewController {
     
     @IBAction func buttonPushed() {
-        
-    view.backgroundColor = .white
-        
-    i += 1
-            
-        switch i {
-        
-        case 1:
-    view.backgroundColor = .red
-        case 2:
-    view.backgroundColor = .orange
-        case 3:
-    view.backgroundColor = .yellow
-        case 4:
-    view.backgroundColor = .green
-        case 5:
-    view.backgroundColor = .blue
-        case 6:
-    view.backgroundColor = .purple
-
-        default:
-    i = 0
-            
+        isOn = !isOn
+        updateUI()
     }
     
+var isOn = true
+    
+    override func viewDidLoad() {
+    super.viewDidLoad()
+        updateUI()
+   
     }
-
-    }
-
-
+    
+    fileprivate func updateUI() {
+        
+let device = AVCaptureDevice.default(for: .video)
+        
+if let device = device {
+do {
+try device.lockForConfiguration()
+    device.torchMode = isOn ? .on : .off
+    device.unlockForConfiguration()
+    
+    
+view.backgroundColor = .yellow
+    
+} catch {
+    
+print(error)
+    
+}
+} else {
+    
+view.backgroundColor = isOn ? .white : .black
+}
+}
+    
+    override var prefersStatusBarHidden: Bool {
+    return true
+        
+}
+}
 
